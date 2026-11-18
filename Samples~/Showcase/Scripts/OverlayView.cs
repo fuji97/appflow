@@ -60,7 +60,7 @@ namespace AppFlow.Sample
                 : m_LastEdge;
         }
 
-        static string Kind(AppTransitionRecord r) => r.Custom ? "custom" : r.Crossfade ? "crossfade" : "default flow";
+        static string Kind(AppTransitionRecord r) => r.Custom ? "custom" : r.ParallelPre || r.ParallelMain || r.ParallelPost ? "parallel" : "default flow";
 
         void ApplyHud() => m_Hud.style.display = SampleSettings.Hud ? DisplayStyle.Flex : DisplayStyle.None;
 

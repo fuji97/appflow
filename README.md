@@ -8,16 +8,33 @@ Package Manager > `+` > "Install package from git URL" > `https://github.com/fuj
 
 ## Use
 
-1. `Assets > Create > App Flow > App Flow Graph`. Add `App State` nodes. Per state, in the Graph Inspector:
-   - **Name**: unique, used by code and CLI (Graph Toolkit does not persist `State.Title` set from code, so the name is an option and drives the title).
-   - **Entry**: exactly one. **Behaviour**: an `AppStateBehaviour` asset. **Scene** / **LoadMode** / **UnloadOnExit**: loaded in `Enter`, unloaded after `Exit`.
-2. An edge A→B can customize how that pair transitions. Add a `Custom Transition` condition (an `AppTransitionBehaviour` asset) and/or `Crossfade`. An edge with neither uses the default flow.
+1. `Assets > Create > App Flow > App Flow Graph`. Add `App State` nodes. Per state, the Graph Inspector shows sections (all stored in one `Settings` option):
+   - **Header**: **Name** (unique, used by code and CLI; Graph Toolkit does not persist `State.Title` set from code, so the name is stored in the settings and drives the title), an **Entry** pill (exactly one state) and, in Play mode, the live **Phase** pill of the running state.
+   - **Behaviour**: an `AppStateBehaviour` asset, with an "Edit Script" button.
+   - **Parallel phases**: four Sequential / Parallel rows (Pre, Enter, Exit, Post). Pre and Post run their two phases together when both states are Parallel there; the Exit/Enter group runs together when the leaving state's **Exit** and the entering state's **Enter** are both Parallel.
+   - **Features**: post-processing-style list ("Add Feature" lists every non-abstract `AppStateFeature` subclass in the project; header checkbox enables, `⋮` resets/removes/reorders). Built-in: **Scene** (Scene / LoadMode / UnloadOnExit: loaded in `Enter`, unloaded in `Exit`) and **Log**. Features wrap the behaviour: they run before it in PreEnter/Enter/PostEnter/Running and after it in PreExit/Exit/PostExit, in list order.
+2. An edge A→B can customize how that pair transitions. Add a `Custom Transition` condition (an `AppTransitionBehaviour` asset) and/or `Phase Mode` (Pre / Main / Post: Inherit, Sequential or Parallel). An edge with neither uses the default flow.
 3. Put an `AppFlowRunner` in the boot scene and assign the `.appflow` asset (its main object is an `AppFlowAsset`).
 4. Move by reference: `[SerializeField] AppStateRef next;` (sub-asset of the `.appflow`), then `await AppFlowRunner.Active.Machine.TransitTo(next)`.
 
 ## Phases
 
-`AppPhase`: PreEnter, Enter, PostEnter, Running, PreExit, Exit, PostExit. Default flow A→B: `A.PreExit, B.PreEnter, A.Exit, B.Enter, A.PostExit, B.PostEnter`, then `B.Running`. Crossfade starts `A.Exit` and `B.Enter` together. A custom transition receives `AppTransitionContext` (both states) and calls the step helpers (`ctx.PreExit()`, `ctx.Enter()`, `ctx.RunDefault()` ...) in any order. A second `TransitTo` while one runs is rejected (returns false, warning). Hook exceptions are logged and the transition continues.
+`AppPhase`: PreEnter, Enter, PostEnter, Running, PreExit, Exit, PostExit. Default flow A→B: `A.PreExit, B.PreEnter, A.Exit, B.Enter, A.PostExit, B.PostEnter`, then `B.Running`. Phase groups: Pre (`A.PreExit`, `B.PreEnter`), Main (`A.Exit`, `B.Enter`), Post (`A.PostExit`, `B.PostEnter`). A group runs Parallel (both started together) when A's Exit and B's Enter are Parallel (Main), or when both states are Parallel for Pre/Post, unless the edge's Phase Mode overrides it; `ctx.ParallelPre/Main/Post` expose the result and `ctx.RunDefault()` honours it. A custom transition receives `AppTransitionContext` (both states) and calls the step helpers (`ctx.PreExit()`, `ctx.Enter()`, `ctx.RunDefault()` ...) in any order. A second `TransitTo` while one runs is rejected (returns false, warning). Hook exceptions are logged and the transition continues.
+
+## Features
+
+A feature is a `[Serializable]` subclass of `AppStateFeature`; it appears in "Add Feature" automatically (one instance per type per state). Its serialized fields are drawn in its foldout; `Machine` and `State` are set at runtime. Each machine gets its own copy, so runtime changes never touch the asset.
+
+```csharp
+[Serializable]
+public sealed class MusicFeature : AppStateFeature
+{
+    public AudioClip Clip;
+    public override async Awaitable OnEnter(AppTransitionContext ctx) => MusicPlayer.Play(Clip);
+}
+```
+
+Hooks match `AppStateBehaviour` (`OnPreEnter` … `OnPostExit`, `OnRunning`, `OnRunningUpdate`). Exceptions are logged per feature and do not stop the others. Renaming a feature class loses its data (the inspector shows "Missing feature") unless you add `[UnityEngine.Scripting.APIUpdating.MovedFrom]`.
 
 ## CLI (optional)
 
@@ -41,7 +58,7 @@ Package Manager > AppFlow > Samples > Import "Showcase". Add the imported `Scene
 | Edge | Kind | Visible effect |
 |---|---|---|
 | Splash > MainMenu, MainMenu > Credits, Game > Pause, ... (no edge) | default flow | sequential: the old screen pops out, then the new one pops in |
-| MainMenu <> Settings | crossfade | both screens slide sideways at the same time |
+| MainMenu <> Settings | phase mode Main=Parallel | both screens slide sideways at the same time |
 | MainMenu > Game, Pause > MainMenu | custom (`CurtainTransition`) | curtain drops, loading bar fills, curtain lifts |
 | Pause > Game | custom (`ResumeTransition`) | only Pause's exit phases run: Game is not re-entered, its scene is not reloaded |
 

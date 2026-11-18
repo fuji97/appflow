@@ -10,6 +10,6 @@ namespace AppFlow
         public Hash128 From;
         public Hash128 To;
         public AppTransitionBehaviour Behaviour;
-        public bool Crossfade;
+        public AppPhaseModes Modes;
     }
 }

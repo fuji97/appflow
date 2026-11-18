@@ -34,6 +34,23 @@ namespace AppFlow.Tests
         public override void OnRunning() => Log.Add($"{State.name}.Running");
     }
 
+    /// <summary>Logs "State.F.Phase" into <see cref="RecordingBehaviour.Log"/>.</summary>
+    [Serializable]
+    [Unity.Scripting.LifecycleManagement.NoAutoStaticsCleanup]
+    public sealed class RecordingFeature : AppStateFeature
+    {
+        public static int Updates;
+
+        public override async Awaitable OnPreEnter(AppTransitionContext ctx) => RecordingBehaviour.Log.Add($"{State.name}.F.PreEnter");
+        public override async Awaitable OnEnter(AppTransitionContext ctx) => RecordingBehaviour.Log.Add($"{State.name}.F.Enter");
+        public override async Awaitable OnPostEnter(AppTransitionContext ctx) => RecordingBehaviour.Log.Add($"{State.name}.F.PostEnter");
+        public override async Awaitable OnPreExit(AppTransitionContext ctx) => RecordingBehaviour.Log.Add($"{State.name}.F.PreExit");
+        public override async Awaitable OnExit(AppTransitionContext ctx) => RecordingBehaviour.Log.Add($"{State.name}.F.Exit");
+        public override async Awaitable OnPostExit(AppTransitionContext ctx) => RecordingBehaviour.Log.Add($"{State.name}.F.PostExit");
+        public override void OnRunning() => RecordingBehaviour.Log.Add($"{State.name}.F.Running");
+        public override void OnRunningUpdate() => Updates++;
+    }
+
     /// <summary>Custom transition that only enters the target.</summary>
     [Unity.Scripting.LifecycleManagement.NoAutoStaticsCleanup]
     public sealed class RecordingTransition : AppTransitionBehaviour

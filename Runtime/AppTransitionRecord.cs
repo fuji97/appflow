@@ -9,7 +9,7 @@ namespace AppFlow
         public string From;
         public string To;
         public bool Custom;
-        public bool Crossfade;
+        public bool ParallelPre, ParallelMain, ParallelPost;
         public double StartedAt;
         public double Duration;
         public int Exceptions;

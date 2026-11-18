@@ -17,10 +17,10 @@ namespace AppFlow.Sample
         protected AppStateRef Back => m_Back;
         protected ScreenView View => ScreenView.For(State);
 
-        // A crossfade slides the screens sideways; deeper screens live on the right.
+        // A parallel Main group slides the screens sideways; deeper screens live on the right.
         string OffClass(AppTransitionContext ctx, AppStateBehaviour other)
         {
-            if (!ctx.Crossfade || other is not ScreenStateBehaviour o) return "off-pop";
+            if (!ctx.ParallelMain || other is not ScreenStateBehaviour o) return "off-pop";
             return m_Depth > o.m_Depth ? "off-right" : "off-left";
         }
 

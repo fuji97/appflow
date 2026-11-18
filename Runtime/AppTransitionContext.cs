@@ -1,4 +1,5 @@
 #pragma warning disable CS1998 // helpers are async so a null From is a cheap no-op
+using System;
 using UnityEngine;
 
 namespace AppFlow
@@ -13,17 +14,21 @@ namespace AppFlow
         public AppStateBehaviour To => m_To.Behaviour;
         public AppStateRef FromRef => m_From?.Ref;
         public AppStateRef ToRef => m_To.Ref;
-        public bool Crossfade { get; }
+        /// <summary>Resolved for this transition (edge Phase Mode, else both states Parallel); custom transitions may read it.</summary>
+        public bool ParallelPre => Record.ParallelPre;
+        /// <summary>Resolved for this transition (edge Phase Mode, else both states Parallel); custom transitions may read it.</summary>
+        public bool ParallelMain => Record.ParallelMain;
+        /// <summary>Resolved for this transition (edge Phase Mode, else both states Parallel); custom transitions may read it.</summary>
+        public bool ParallelPost => Record.ParallelPost;
         public AppFlowMachine Machine { get; }
 
         internal AppTransitionRecord Record { get; }
 
-        internal AppTransitionContext(AppFlowMachine machine, AppFlowMachine.StateEntry from, AppFlowMachine.StateEntry to, bool crossfade, AppTransitionRecord record)
+        internal AppTransitionContext(AppFlowMachine machine, AppFlowMachine.StateEntry from, AppFlowMachine.StateEntry to, AppTransitionRecord record)
         {
             Machine = machine;
             m_From = from;
             m_To = to;
-            Crossfade = crossfade;
             Record = record;
         }
 
@@ -34,25 +39,21 @@ namespace AppFlow
         public async Awaitable Enter() { await Machine.RunPhase(m_To, AppPhase.Enter, this); }
         public async Awaitable PostEnter() { await Machine.RunPhase(m_To, AppPhase.PostEnter, this); }
 
-        /// <summary>Default flow: A.PreExit, B.PreEnter, A.Exit, B.Enter, A.PostExit, B.PostEnter. Crossfade starts A.Exit and B.Enter together.</summary>
-        public async Awaitable RunDefault(bool crossfade = false)
+        /// <summary>Default flow: Pre group (A.PreExit, B.PreEnter), Main (A.Exit, B.Enter), Post (A.PostExit, B.PostEnter). A Parallel group starts both phases together.</summary>
+        public async Awaitable RunDefault()
         {
-            await PreExit();
-            await PreEnter();
-            if (crossfade)
-            {
-                var a = Exit();
-                var b = Enter();
-                await a;
-                await b;
-            }
-            else
-            {
-                await Exit();
-                await Enter();
-            }
-            await PostExit();
-            await PostEnter();
+            await Group(PreExit, PreEnter, ParallelPre);
+            await Group(Exit, Enter, ParallelMain);
+            await Group(PostExit, PostEnter, ParallelPost);
+        }
+
+        static async Awaitable Group(Func<Awaitable> exit, Func<Awaitable> enter, bool parallel)
+        {
+            if (!parallel) { await exit(); await enter(); return; }
+            var a = exit();
+            var b = enter();
+            await a;
+            await b;
         }
     }
 }

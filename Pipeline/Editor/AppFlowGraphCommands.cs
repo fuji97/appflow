@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.GraphToolkit.Editor;
@@ -91,22 +92,33 @@ namespace AppFlow.Editor
             if (code != ExitCode.Success) return code;
 
             foreach (var s in sm.GetStates().OfType<AppState>())
+            {
+                var st = s.Settings;
+                var features = st.Features ?? new List<AppStateFeature>();
+                var scene = features.OfType<SceneFeature>().FirstOrDefault();
                 cmd.Result.WriteRecord(new
                 {
                     kind = "state",
                     name = s.StateName,
                     id = s.ID.ToString(),
-                    entry = s.Get<bool>(AppState.OptEntry),
-                    behaviour = PathOf(s.Get<AppStateBehaviour>(AppState.OptBehaviour)),
-                    scene = PathOf(s.Get<SceneAsset>(AppState.OptScene)),
-                    loadMode = s.Get<LoadSceneMode>(AppState.OptLoadMode).ToString(),
-                    unloadOnExit = s.Get<bool>(AppState.OptUnloadOnExit),
+                    entry = st.Entry,
+                    parallelPre = st.ParallelPre,
+                    parallelEnter = st.ParallelEnter,
+                    parallelExit = st.ParallelExit,
+                    parallelPost = st.ParallelPost,
+                    behaviour = PathOf(st.Behaviour),
+                    features = features.Select(f => f == null ? "(missing)" : f.GetType().Name + (f.Enabled ? "" : " (disabled)")).ToArray(),
+                    scene = scene != null && !string.IsNullOrEmpty(scene.Scene.Guid) ? AssetDatabase.GUIDToAssetPath(scene.Scene.Guid) : null,
+                    loadMode = scene?.LoadMode.ToString(),
+                    unloadOnExit = scene?.UnloadOnExit,
                 });
+            }
 
             foreach (var s in sm.GetStates().OfType<AppState>())
                 foreach (var t in s.GetOutgoingTransitions())
                 {
                     var conditions = AppFlowValidation.ConditionsOf(t).ToList();
+                    var pm = conditions.OfType<PhaseModeCondition>().FirstOrDefault()?.Value ?? default;
                     cmd.Result.WriteRecord(new
                     {
                         kind = "transition",
@@ -114,7 +126,9 @@ namespace AppFlow.Editor
                         from = AppState.NameOf(t.FromState),
                         to = AppState.NameOf(t.ToState),
                         customTransition = PathOf(conditions.OfType<CustomTransitionCondition>().FirstOrDefault()?.Value),
-                        crossfade = conditions.OfType<CrossfadeCondition>().Any(),
+                        pre = pm.Pre.ToString(),
+                        main = pm.Main.ToString(),
+                        post = pm.Post.ToString(),
                     });
                 }
 
@@ -162,7 +176,11 @@ namespace AppFlow.Editor
             [CliArg("name", "Unique state name", Required = true)] string name,
             [CliArg("x", "Graph x position")] float x = 0,
             [CliArg("y", "Graph y position")] float y = 0,
-            [CliArg("entry", "Make this the Entry state")] bool entry = false)
+            [CliArg("entry", "Make this the Entry state")] bool entry = false,
+            [CliArg("parallel-pre", "PreExit/PreEnter may run Parallel with another state")] bool parallelPre = false,
+            [CliArg("parallel-enter", "Enter may run Parallel with the previous state's Exit (when that state has Parallel Exit)")] bool parallelEnter = false,
+            [CliArg("parallel-exit", "Exit may run Parallel with the next state's Enter (when that state has Parallel Enter)")] bool parallelExit = false,
+            [CliArg("parallel-post", "PostExit/PostEnter may run Parallel with another state")] bool parallelPost = false)
         {
             var code = Open(cmd, asset, out var sm);
             if (code != ExitCode.Success) return code;
@@ -177,24 +195,25 @@ namespace AppFlow.Editor
             try
             {
                 sm.AddState(state);
-                state.GetOptionByName(AppState.OptName).TrySetValue(name);
+                state.SetSettings(new AppStateSettings { Name = name, Entry = entry, ParallelPre = parallelPre, ParallelEnter = parallelEnter, ParallelExit = parallelExit, ParallelPost = parallelPost });
                 state.Title = name; // shows immediately in an open window; the option is what persists
-                state.GetOptionByName(AppState.OptEntry).TrySetValue(entry);
                 StateMachineDatabase.SaveStateMachine(sm);
             }
             finally { sm.UndoEndRecordStateMachine(); }
-            cmd.Result.Write(new { name, id = state.ID.ToString() });
+            cmd.Result.Write(new { name, id = state.ID.ToString(), parallelPre, parallelEnter, parallelExit, parallelPost });
             return ExitCode.Success;
         }
 
-        [CliGroupCommand(Group, "Connect two states and set what the edge does (custom transition and/or crossfade)." + Saves, Effect = CommandEffect.Idempotent, MainThreadRequired = true)]
+        [CliGroupCommand(Group, "Connect two states and set what the edge does (custom transition and/or phase mode)." + Saves, Effect = CommandEffect.Idempotent, MainThreadRequired = true)]
         internal static ExitCode Connect(
             CommandContext cmd,
             [CliArg("asset", "Path of the .appflow asset", Required = true)] string asset,
             [CliArg("from", "Source state name or id", Required = true)] string from,
             [CliArg("to", "Target state name or id", Required = true)] string to,
             [CliArg("transition", "Asset path of an AppTransitionBehaviour; empty for none")] string transition = "",
-            [CliArg("crossfade", "Start source Exit and target Enter together")] bool crossfade = false)
+            [CliArg("pre", "Pre group: Inherit, Sequential or Parallel")] AppPhaseMode pre = AppPhaseMode.Inherit,
+            [CliArg("main", "Main group: Inherit, Sequential or Parallel")] AppPhaseMode main = AppPhaseMode.Inherit,
+            [CliArg("post", "Post group: Inherit, Sequential or Parallel")] AppPhaseMode post = AppPhaseMode.Inherit)
         {
             var code = Open(cmd, asset, out var sm);
             if (code != ExitCode.Success) return code;
@@ -210,14 +229,15 @@ namespace AppFlow.Editor
             {
                 t = existing ?? sm.Connect(a, b);
                 var root = t.GetRule(0).RootCondition;
-                foreach (var c in root.Get().Where(c => c is CustomTransitionCondition or CrossfadeCondition).ToList())
+                foreach (var c in root.Get().Where(c => c is CustomTransitionCondition or PhaseModeCondition).ToList())
                     root.Remove(c);
                 if (behaviour != null) root.Add(new CustomTransitionCondition { Value = behaviour });
-                if (crossfade) root.Add(new CrossfadeCondition());
+                var modes = new AppPhaseModes { Pre = pre, Main = main, Post = post };
+                if (!modes.IsInherit) root.Add(new PhaseModeCondition { Value = modes });
                 StateMachineDatabase.SaveStateMachine(sm);
             }
             finally { sm.UndoEndRecordStateMachine(); }
-            cmd.Result.Write(new { id = t.ID.ToString(), from = a.StateName, to = b.StateName, customTransition = PathOf(behaviour), crossfade });
+            cmd.Result.Write(new { id = t.ID.ToString(), from = a.StateName, to = b.StateName, customTransition = PathOf(behaviour), pre = pre.ToString(), main = main.ToString(), post = post.ToString() });
             return ExitCode.Success;
         }
 
@@ -236,7 +256,9 @@ namespace AppFlow.Editor
             sm.UndoBeginRecordStateMachine("set_behaviour");
             try
             {
-                s.GetOptionByName(AppState.OptBehaviour).TrySetValue(obj);
+                var st = s.Settings.Clone();
+                st.Behaviour = obj;
+                s.SetSettings(st);
                 StateMachineDatabase.SaveStateMachine(sm);
             }
             finally { sm.UndoEndRecordStateMachine(); }
@@ -244,12 +266,42 @@ namespace AppFlow.Editor
             return ExitCode.Success;
         }
 
-        [CliGroupCommand(Group, "Set the scene a state loads (empty clears)." + Saves, Effect = CommandEffect.Idempotent, MainThreadRequired = true)]
+        [CliGroupCommand(Group, "Set which phases of a state may run Parallel with the other state's. Pre/Post: both states must flag the group. Exit/Enter group: the leaving state's Exit and the entering state's Enter. Flags not passed become false." + Saves, Effect = CommandEffect.Idempotent, MainThreadRequired = true)]
+        internal static ExitCode SetParallel(
+            CommandContext cmd,
+            [CliArg("asset", "Path of the .appflow asset", Required = true)] string asset,
+            [CliArg("state", "State name or id", Required = true)] string state,
+            [CliArg("pre", "PreExit/PreEnter group")] bool pre = false,
+            [CliArg("enter", "Enter side of the Exit/Enter group")] bool enter = false,
+            [CliArg("exit", "Exit side of the Exit/Enter group")] bool exit = false,
+            [CliArg("post", "PostExit/PostEnter group")] bool post = false)
+        {
+            var code = Open(cmd, asset, out var sm);
+            if (code != ExitCode.Success) return code;
+            if ((code = FindState(cmd, sm, state, out var s)) != ExitCode.Success) return code;
+
+            sm.UndoBeginRecordStateMachine("set_parallel");
+            try
+            {
+                var st = s.Settings.Clone();
+                st.ParallelPre = pre;
+                st.ParallelEnter = enter;
+                st.ParallelExit = exit;
+                st.ParallelPost = post;
+                s.SetSettings(st);
+                StateMachineDatabase.SaveStateMachine(sm);
+            }
+            finally { sm.UndoEndRecordStateMachine(); }
+            cmd.Result.Write(new { state = s.StateName, pre, enter, exit, post });
+            return ExitCode.Success;
+        }
+
+        [CliGroupCommand(Group, "Set the scene a state loads through its Scene feature (empty removes the feature)." + Saves, Effect = CommandEffect.Idempotent, MainThreadRequired = true)]
         internal static ExitCode SetScene(
             CommandContext cmd,
             [CliArg("asset", "Path of the .appflow asset", Required = true)] string asset,
             [CliArg("state", "State name or id", Required = true)] string state,
-            [CliArg("scene", "Asset path of a scene; empty clears")] string scene = "",
+            [CliArg("scene", "Asset path of a scene; empty removes the Scene feature")] string scene = "",
             [CliArg("load-mode", "Single or Additive")] LoadSceneMode loadMode = LoadSceneMode.Additive,
             [CliArg("unload-on-exit", "Unload an additive scene when the state exits")] bool unloadOnExit = true)
         {
@@ -261,9 +313,26 @@ namespace AppFlow.Editor
             sm.UndoBeginRecordStateMachine("set_scene");
             try
             {
-                s.GetOptionByName(AppState.OptScene).TrySetValue(obj);
-                s.GetOptionByName(AppState.OptLoadMode).TrySetValue(loadMode);
-                s.GetOptionByName(AppState.OptUnloadOnExit).TrySetValue(unloadOnExit);
+                var st = s.Settings.Clone();
+                var items = st.Features;
+                var index = items.FindIndex(f => f is SceneFeature);
+                if (obj == null)
+                {
+                    if (index >= 0) items.RemoveAt(index);
+                }
+                else
+                {
+                    var path = PathOf(obj);
+                    var feature = new SceneFeature
+                    {
+                        Scene = new SceneReference { Guid = AssetDatabase.AssetPathToGUID(path), Path = path },
+                        LoadMode = loadMode,
+                        UnloadOnExit = unloadOnExit,
+                    };
+                    if (index >= 0) items[index] = feature;
+                    else items.Insert(0, feature);
+                }
+                s.SetSettings(st);
                 StateMachineDatabase.SaveStateMachine(sm);
             }
             finally { sm.UndoEndRecordStateMachine(); }

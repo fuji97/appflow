@@ -3,11 +3,10 @@ using Unity.GraphToolkit.Editor;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace AppFlow.Editor
 {
-    [ScriptedImporter(3, AppFlowStateMachine.AssetExtension)]
+    [ScriptedImporter(5, AppFlowStateMachine.AssetExtension)]
     public sealed class AppFlowImporter : ScriptedImporter
     {
         public override void OnImportAsset(AssetImportContext ctx)
@@ -31,18 +30,24 @@ namespace AppFlow.Editor
                 // Keyed by state id so references in scenes/prefabs survive renames and reimports.
                 ctx.AddObjectToAsset("state-" + state.ID, stateRef);
 
-                var scene = state.Get<SceneAsset>(AppState.OptScene);
+                var settings = state.Settings;
+                var features = settings.Features?.Where(f => f != null).ToList() ?? new();
+                // The GUID survives scene moves/renames; the path the runtime loads is resolved here.
+                foreach (var sf in features.OfType<SceneFeature>())
+                    sf.Scene.Path = string.IsNullOrEmpty(sf.Scene.Guid) ? "" : AssetDatabase.GUIDToAssetPath(sf.Scene.Guid);
                 asset.States.Add(new AppStateData
                 {
                     Id = state.ID,
                     Name = state.StateName,
                     Ref = stateRef,
-                    Behaviour = state.Get<AppStateBehaviour>(AppState.OptBehaviour),
-                    ScenePath = scene != null ? AssetDatabase.GetAssetPath(scene) : "",
-                    LoadMode = state.Get<LoadSceneMode>(AppState.OptLoadMode),
-                    UnloadOnExit = state.Get<bool>(AppState.OptUnloadOnExit),
+                    Behaviour = settings.Behaviour,
+                    ParallelPre = settings.ParallelPre,
+                    ParallelEnter = settings.ParallelEnter,
+                    ParallelExit = settings.ParallelExit,
+                    ParallelPost = settings.ParallelPost,
+                    Features = features,
                 });
-                if (asset.EntryStateId == default && state.Get<bool>(AppState.OptEntry))
+                if (asset.EntryStateId == default && settings.Entry)
                     asset.EntryStateId = state.ID;
             }
 
@@ -51,15 +56,15 @@ namespace AppFlow.Editor
                 {
                     var conditions = AppFlowValidation.ConditionsOf(t).ToList();
                     var custom = conditions.OfType<CustomTransitionCondition>().FirstOrDefault();
-                    var crossfade = conditions.OfType<CrossfadeCondition>().Any();
-                    if (custom == null && !crossfade) continue;
+                    var modes = conditions.OfType<PhaseModeCondition>().FirstOrDefault()?.Value ?? default;
+                    if (custom == null && modes.IsInherit) continue;
                     asset.Transitions.Add(new AppTransitionData
                     {
                         Id = t.ID,
                         From = t.FromState.ID,
                         To = t.ToState.ID,
                         Behaviour = custom?.Value,
-                        Crossfade = crossfade,
+                        Modes = modes,
                     });
                 }
 

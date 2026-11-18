@@ -182,50 +182,24 @@ MonoBehaviour:
           m_HasUserColor: 0
         m_OptionConstantsById:
           m_KeyList:
-          - __option_Name
-          - __option_Entry
-          - __option_Behaviour
-          - __option_Scene
-          - __option_LoadMode
-          - __option_UnloadOnExit
+          - __option_Settings
           m_ValueList:
           - rid: 6302956210078351612
-          - rid: 6302956210078351613
-          - rid: 6302956210078351614
-          - rid: 6302956210078351615
-          - rid: 6302956210078351616
-          - rid: 6302956210078351617
         m_Node:
           rid: 6302956210078351618
     - rid: 6302956210078351612
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: Splash
-    - rid: 6302956210078351613
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 1
-    - rid: 6302956210078351614
-      type: {class: 'Constant`1[[AppFlow.AppStateBehaviour, AppFlow.Runtime]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 11400000, guid: ee809d79da8b2bd48b0613155e3af3cb, type: 2}
-    - rid: 6302956210078351615
-      type: {class: 'Constant`1[[UnityEditor.SceneAsset, UnityEditor.CoreModule]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 102900000, guid: 84e29a4344ba70d4f990f4f84076e13b, type: 3}
-    - rid: 6302956210078351616
-      type: {class: EnumConstant, ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
+      type: {class: 'Constant`1[[AppFlow.Editor.AppStateSettings, AppFlow.Editor]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
       data:
         m_Value:
-          m_EnumType:
-            m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          m_Value: 1
-        m_EnumType:
-          m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - rid: 6302956210078351617
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 1
+          Name: Splash
+          Entry: 1
+          Behaviour: {fileID: 11400000, guid: ee809d79da8b2bd48b0613155e3af3cb, type: 2}
+          ParallelPre: 0
+          ParallelEnter: 0
+          ParallelExit: 0
+          ParallelPost: 0
+          Features:
+          - rid: 7302406871643062399
     - rid: 6302956210078351618
       type: {class: AppState, ns: AppFlow.Editor, asm: AppFlow.Editor}
       data: 
@@ -250,50 +224,24 @@ MonoBehaviour:
           m_HasUserColor: 0
         m_OptionConstantsById:
           m_KeyList:
-          - __option_Name
-          - __option_Entry
-          - __option_Behaviour
-          - __option_Scene
-          - __option_LoadMode
-          - __option_UnloadOnExit
+          - __option_Settings
           m_ValueList:
           - rid: 6302956210078351620
-          - rid: 6302956210078351621
-          - rid: 6302956210078351622
-          - rid: 6302956210078351623
-          - rid: 6302956210078351624
-          - rid: 6302956210078351625
         m_Node:
           rid: 6302956210078351626
     - rid: 6302956210078351620
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: MainMenu
-    - rid: 6302956210078351621
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 0
-    - rid: 6302956210078351622
-      type: {class: 'Constant`1[[AppFlow.AppStateBehaviour, AppFlow.Runtime]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 11400000, guid: 565289742d28ec24aa84ff50acbf9cf6, type: 2}
-    - rid: 6302956210078351623
-      type: {class: 'Constant`1[[UnityEditor.SceneAsset, UnityEditor.CoreModule]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 102900000, guid: 1779be9b8f76f0c478d45c86119917fd, type: 3}
-    - rid: 6302956210078351624
-      type: {class: EnumConstant, ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
+      type: {class: 'Constant`1[[AppFlow.Editor.AppStateSettings, AppFlow.Editor]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
       data:
         m_Value:
-          m_EnumType:
-            m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          m_Value: 1
-        m_EnumType:
-          m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - rid: 6302956210078351625
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 1
+          Name: MainMenu
+          Entry: 0
+          Behaviour: {fileID: 11400000, guid: 565289742d28ec24aa84ff50acbf9cf6, type: 2}
+          ParallelPre: 0
+          ParallelEnter: 0
+          ParallelExit: 0
+          ParallelPost: 0
+          Features:
+          - rid: 7302406871643062400
     - rid: 6302956210078351626
       type: {class: AppState, ns: AppFlow.Editor, asm: AppFlow.Editor}
       data: 
@@ -318,50 +266,24 @@ MonoBehaviour:
           m_HasUserColor: 0
         m_OptionConstantsById:
           m_KeyList:
-          - __option_Name
-          - __option_Entry
-          - __option_Behaviour
-          - __option_Scene
-          - __option_LoadMode
-          - __option_UnloadOnExit
+          - __option_Settings
           m_ValueList:
           - rid: 6302956210078351628
-          - rid: 6302956210078351629
-          - rid: 6302956210078351630
-          - rid: 6302956210078351631
-          - rid: 6302956210078351632
-          - rid: 6302956210078351633
         m_Node:
           rid: 6302956210078351634
     - rid: 6302956210078351628
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: Settings
-    - rid: 6302956210078351629
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 0
-    - rid: 6302956210078351630
-      type: {class: 'Constant`1[[AppFlow.AppStateBehaviour, AppFlow.Runtime]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 11400000, guid: 8e85144cf5777d7428c7b5d5f806e4f2, type: 2}
-    - rid: 6302956210078351631
-      type: {class: 'Constant`1[[UnityEditor.SceneAsset, UnityEditor.CoreModule]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 102900000, guid: f4fbe3ffc7602d74f8bacdd1730fa015, type: 3}
-    - rid: 6302956210078351632
-      type: {class: EnumConstant, ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
+      type: {class: 'Constant`1[[AppFlow.Editor.AppStateSettings, AppFlow.Editor]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
       data:
         m_Value:
-          m_EnumType:
-            m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          m_Value: 1
-        m_EnumType:
-          m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - rid: 6302956210078351633
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 1
+          Name: Settings
+          Entry: 0
+          Behaviour: {fileID: 11400000, guid: 8e85144cf5777d7428c7b5d5f806e4f2, type: 2}
+          ParallelPre: 0
+          ParallelEnter: 0
+          ParallelExit: 0
+          ParallelPost: 0
+          Features:
+          - rid: 7302406871643062401
     - rid: 6302956210078351634
       type: {class: AppState, ns: AppFlow.Editor, asm: AppFlow.Editor}
       data: 
@@ -386,50 +308,24 @@ MonoBehaviour:
           m_HasUserColor: 0
         m_OptionConstantsById:
           m_KeyList:
-          - __option_Name
-          - __option_Entry
-          - __option_Behaviour
-          - __option_Scene
-          - __option_LoadMode
-          - __option_UnloadOnExit
+          - __option_Settings
           m_ValueList:
           - rid: 6302956210078351636
-          - rid: 6302956210078351637
-          - rid: 6302956210078351638
-          - rid: 6302956210078351639
-          - rid: 6302956210078351640
-          - rid: 6302956210078351641
         m_Node:
           rid: 6302956210078351642
     - rid: 6302956210078351636
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: Credits
-    - rid: 6302956210078351637
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 0
-    - rid: 6302956210078351638
-      type: {class: 'Constant`1[[AppFlow.AppStateBehaviour, AppFlow.Runtime]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 11400000, guid: 519ab3982e32a2c43af20490cb0ea179, type: 2}
-    - rid: 6302956210078351639
-      type: {class: 'Constant`1[[UnityEditor.SceneAsset, UnityEditor.CoreModule]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 102900000, guid: 66d46f403bd258d4c82250064dd06edb, type: 3}
-    - rid: 6302956210078351640
-      type: {class: EnumConstant, ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
+      type: {class: 'Constant`1[[AppFlow.Editor.AppStateSettings, AppFlow.Editor]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
       data:
         m_Value:
-          m_EnumType:
-            m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          m_Value: 1
-        m_EnumType:
-          m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - rid: 6302956210078351641
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 1
+          Name: Credits
+          Entry: 0
+          Behaviour: {fileID: 11400000, guid: 519ab3982e32a2c43af20490cb0ea179, type: 2}
+          ParallelPre: 0
+          ParallelEnter: 0
+          ParallelExit: 0
+          ParallelPost: 0
+          Features:
+          - rid: 7302406871643062402
     - rid: 6302956210078351642
       type: {class: AppState, ns: AppFlow.Editor, asm: AppFlow.Editor}
       data: 
@@ -454,50 +350,24 @@ MonoBehaviour:
           m_HasUserColor: 0
         m_OptionConstantsById:
           m_KeyList:
-          - __option_Name
-          - __option_Entry
-          - __option_Behaviour
-          - __option_Scene
-          - __option_LoadMode
-          - __option_UnloadOnExit
+          - __option_Settings
           m_ValueList:
           - rid: 6302956210078351644
-          - rid: 6302956210078351645
-          - rid: 6302956210078351646
-          - rid: 6302956210078351647
-          - rid: 6302956210078351648
-          - rid: 6302956210078351649
         m_Node:
           rid: 6302956210078351650
     - rid: 6302956210078351644
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: Game
-    - rid: 6302956210078351645
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 0
-    - rid: 6302956210078351646
-      type: {class: 'Constant`1[[AppFlow.AppStateBehaviour, AppFlow.Runtime]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 11400000, guid: a8095301aaa478e448f87af6ba9322d5, type: 2}
-    - rid: 6302956210078351647
-      type: {class: 'Constant`1[[UnityEditor.SceneAsset, UnityEditor.CoreModule]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 102900000, guid: d9e56bf2930992943b19a7973dcf1fc0, type: 3}
-    - rid: 6302956210078351648
-      type: {class: EnumConstant, ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
+      type: {class: 'Constant`1[[AppFlow.Editor.AppStateSettings, AppFlow.Editor]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
       data:
         m_Value:
-          m_EnumType:
-            m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          m_Value: 1
-        m_EnumType:
-          m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - rid: 6302956210078351649
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 0
+          Name: Game
+          Entry: 0
+          Behaviour: {fileID: 11400000, guid: a8095301aaa478e448f87af6ba9322d5, type: 2}
+          ParallelPre: 0
+          ParallelEnter: 0
+          ParallelExit: 0
+          ParallelPost: 0
+          Features:
+          - rid: 7302406871643062403
     - rid: 6302956210078351650
       type: {class: AppState, ns: AppFlow.Editor, asm: AppFlow.Editor}
       data: 
@@ -522,50 +392,24 @@ MonoBehaviour:
           m_HasUserColor: 0
         m_OptionConstantsById:
           m_KeyList:
-          - __option_Name
-          - __option_Entry
-          - __option_Behaviour
-          - __option_Scene
-          - __option_LoadMode
-          - __option_UnloadOnExit
+          - __option_Settings
           m_ValueList:
           - rid: 6302956210078351652
-          - rid: 6302956210078351653
-          - rid: 6302956210078351654
-          - rid: 6302956210078351655
-          - rid: 6302956210078351656
-          - rid: 6302956210078351657
         m_Node:
           rid: 6302956210078351658
     - rid: 6302956210078351652
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: Pause
-    - rid: 6302956210078351653
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 0
-    - rid: 6302956210078351654
-      type: {class: 'Constant`1[[AppFlow.AppStateBehaviour, AppFlow.Runtime]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 11400000, guid: 310d4250e504b7049b995a4e7e28f643, type: 2}
-    - rid: 6302956210078351655
-      type: {class: 'Constant`1[[UnityEditor.SceneAsset, UnityEditor.CoreModule]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: {fileID: 102900000, guid: addc65272e93a2044ad45c023478bc78, type: 3}
-    - rid: 6302956210078351656
-      type: {class: EnumConstant, ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
+      type: {class: 'Constant`1[[AppFlow.Editor.AppStateSettings, AppFlow.Editor]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
       data:
         m_Value:
-          m_EnumType:
-            m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          m_Value: 1
-        m_EnumType:
-          m_Identification: UnityEngine.SceneManagement.LoadSceneMode, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - rid: 6302956210078351657
-      type: {class: 'Constant`1[[System.Boolean, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
-      data:
-        m_Value: 1
+          Name: Pause
+          Entry: 0
+          Behaviour: {fileID: 11400000, guid: 310d4250e504b7049b995a4e7e28f643, type: 2}
+          ParallelPre: 0
+          ParallelEnter: 0
+          ParallelExit: 0
+          ParallelPost: 0
+          Features:
+          - rid: 7302406871643062404
     - rid: 6302956210078351658
       type: {class: AppState, ns: AppFlow.Editor, asm: AppFlow.Editor}
       data: 
@@ -635,6 +479,7 @@ MonoBehaviour:
         m_GroupOperation: 0
         m_SubConditions:
         - rid: 6302956210078351662
+        - rid: 7302406871643062421
     - rid: 6302956210078351662
       type: {class: UserConditionModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: UnityEditor.GraphToolkitModule}
       data:
@@ -647,11 +492,8 @@ MonoBehaviour:
         m_Version: 2
         m_Title: 
         m_Condition:
-          rid: 6302956210078351663
+          rid: -2
         m_Comparison: 0
-    - rid: 6302956210078351663
-      type: {class: CrossfadeCondition, ns: AppFlow.Editor, asm: AppFlow.Editor}
-      data: 
     - rid: 6302956210078351664
       type: {class: StateToStateTransitionModel, ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
       data:
@@ -718,6 +560,7 @@ MonoBehaviour:
         m_GroupOperation: 0
         m_SubConditions:
         - rid: 6302956210078351667
+        - rid: 7302406871643062423
     - rid: 6302956210078351667
       type: {class: UserConditionModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: UnityEditor.GraphToolkitModule}
       data:
@@ -730,11 +573,8 @@ MonoBehaviour:
         m_Version: 2
         m_Title: 
         m_Condition:
-          rid: 6302956210078351668
+          rid: -2
         m_Comparison: 0
-    - rid: 6302956210078351668
-      type: {class: CrossfadeCondition, ns: AppFlow.Editor, asm: AppFlow.Editor}
-      data: 
     - rid: 6302956210078351669
       type: {class: StateToStateTransitionModel, ns: Unity.GraphToolkit.Editor, asm: UnityEditor.GraphToolkitModule}
       data:
@@ -987,3 +827,99 @@ MonoBehaviour:
       type: {class: CustomTransitionCondition, ns: AppFlow.Editor, asm: AppFlow.Editor}
       data:
         Value: {fileID: 11400000, guid: 6d6a2b554ef55fd4a94b60955e1d2d5c, type: 2}
+    - rid: 7302406871643062399
+      type: {class: SceneFeature, ns: AppFlow, asm: AppFlow.Runtime}
+      data:
+        Enabled: 1
+        Scene:
+          Guid: 84e29a4344ba70d4f990f4f84076e13b
+          Path: Assets/Samples/AppFlow/0.1.0/Showcase/Scenes/Splash.unity
+        LoadMode: 1
+        UnloadOnExit: 1
+    - rid: 7302406871643062400
+      type: {class: SceneFeature, ns: AppFlow, asm: AppFlow.Runtime}
+      data:
+        Enabled: 1
+        Scene:
+          Guid: 1779be9b8f76f0c478d45c86119917fd
+          Path: Assets/Samples/AppFlow/0.1.0/Showcase/Scenes/MainMenu.unity
+        LoadMode: 1
+        UnloadOnExit: 1
+    - rid: 7302406871643062401
+      type: {class: SceneFeature, ns: AppFlow, asm: AppFlow.Runtime}
+      data:
+        Enabled: 1
+        Scene:
+          Guid: f4fbe3ffc7602d74f8bacdd1730fa015
+          Path: Assets/Samples/AppFlow/0.1.0/Showcase/Scenes/Settings.unity
+        LoadMode: 1
+        UnloadOnExit: 1
+    - rid: 7302406871643062402
+      type: {class: SceneFeature, ns: AppFlow, asm: AppFlow.Runtime}
+      data:
+        Enabled: 1
+        Scene:
+          Guid: 66d46f403bd258d4c82250064dd06edb
+          Path: Assets/Samples/AppFlow/0.1.0/Showcase/Scenes/Credits.unity
+        LoadMode: 1
+        UnloadOnExit: 1
+    - rid: 7302406871643062403
+      type: {class: SceneFeature, ns: AppFlow, asm: AppFlow.Runtime}
+      data:
+        Enabled: 1
+        Scene:
+          Guid: d9e56bf2930992943b19a7973dcf1fc0
+          Path: Assets/Samples/AppFlow/0.1.0/Showcase/Scenes/Game.unity
+        LoadMode: 1
+        UnloadOnExit: 0
+    - rid: 7302406871643062404
+      type: {class: SceneFeature, ns: AppFlow, asm: AppFlow.Runtime}
+      data:
+        Enabled: 1
+        Scene:
+          Guid: addc65272e93a2044ad45c023478bc78
+          Path: Assets/Samples/AppFlow/0.1.0/Showcase/Scenes/Pause.unity
+        LoadMode: 1
+        UnloadOnExit: 1
+    - rid: 7302406871643062421
+      type: {class: UserConditionModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: UnityEditor.GraphToolkitModule}
+      data:
+        m_Guid:
+          m_Value0: 16072345789100477959
+          m_Value1: 2570304027346956037
+        m_HashGuid:
+          serializedVersion: 2
+          Hash: 074e941a57710cdf056fc512e58dab23
+        m_Version: 2
+        m_Title: 
+        m_Condition:
+          rid: 7302406871643062422
+        m_Comparison: 0
+    - rid: 7302406871643062422
+      type: {class: PhaseModeCondition, ns: AppFlow.Editor, asm: AppFlow.Editor}
+      data:
+        Value:
+          Pre: 0
+          Main: 2
+          Post: 0
+    - rid: 7302406871643062423
+      type: {class: UserConditionModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: UnityEditor.GraphToolkitModule}
+      data:
+        m_Guid:
+          m_Value0: 13600090185141744305
+          m_Value1: 10777437249493185091
+        m_HashGuid:
+          serializedVersion: 2
+          Hash: b172a68ef739bdbc43b21abd13269195
+        m_Version: 2
+        m_Title: 
+        m_Condition:
+          rid: 7302406871643062424
+        m_Comparison: 0
+    - rid: 7302406871643062424
+      type: {class: PhaseModeCondition, ns: AppFlow.Editor, asm: AppFlow.Editor}
+      data:
+        Value:
+          Pre: 0
+          Main: 2
+          Post: 0

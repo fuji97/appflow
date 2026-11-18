@@ -1,9 +1,10 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace AppFlow.Sample
 {
-    /// <summary>Game keeps its scene loaded while paused (UnloadOnExit is off in the graph) and unloads it itself otherwise.</summary>
+    /// <summary>Game keeps its scene loaded while paused (its Scene feature has UnloadOnExit off) and unloads it itself otherwise.</summary>
     [CreateAssetMenu(menuName = "App Flow/Sample/Game State")]
     public class GameStateBehaviour : ScreenStateBehaviour
     {
@@ -26,8 +27,8 @@ namespace AppFlow.Sample
 
         internal static async Awaitable UnloadSceneOf(AppFlowMachine machine, AppStateRef state)
         {
-            var path = machine.Asset.FindState(state.StateId).ScenePath;
-            if (SceneManager.GetSceneByPath(path).isLoaded) await SceneManager.UnloadSceneAsync(path);
+            var path = machine.Asset.FindState(state.StateId).Features.OfType<SceneFeature>().FirstOrDefault()?.Scene.Path;
+            if (!string.IsNullOrEmpty(path) && SceneManager.GetSceneByPath(path).isLoaded) await SceneManager.UnloadSceneAsync(path);
         }
     }
 }
